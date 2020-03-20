@@ -43,12 +43,13 @@ public class ReclamationActivity extends AppCompatActivity {
     ArrayList<Bitmap> bitmaps;
     GridProductAdapter adapter;
     ArrayList<String> stringImages = new ArrayList<String>();
-    String discriminator,toker;
+    String discriminator,token;
     int userId;
     String article_name,cliet_name;
       int num_consiption,order;
     Button accept,reject;
     JsonObject jsonObject;
+    SharedPreferences sharedPref;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,23 +61,24 @@ public class ReclamationActivity extends AppCompatActivity {
         wifiConnect.connect();
 //        ========================================
 //============================================
-        SharedPreferences sharedPref =getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref =getApplicationContext().getSharedPreferences("user_prefs",Context.MODE_PRIVATE);
          userId = sharedPref.getInt("user_id", -1);
-         toker = sharedPref.getString("token", "");
+         token = sharedPref.getString("token", "");
          discriminator = sharedPref.getString("discriminator", "");
 
 //============================================
-//        Gson gson=new Gson();
-//        jsonObject=gson.fromJson(this.result.getText(), JsonObject.class);
-//
-//        try {
-//            cliet_name=jsonObject.get("nomClient")+"" ;
-//            num_consiption=IntijsonObject.get("num_conception");
-//            article_name.setText(jsonObject.get("nomArticle")+"" );
-//            order.setText(jsonObject.get("order")+"" );
-//        } catch (JsonIOException e) {
-//            e.printStackTrace();
-//        }
+        String result=getIntent().getStringExtra("result");
+        Gson gson=new Gson();
+        jsonObject=gson.fromJson(result, JsonObject.class);
+
+        try {
+            cliet_name=jsonObject.get("nomClient")+"" ;
+            num_consiption=Integer.parseInt(jsonObject.get("num_conception")+"");
+            article_name=jsonObject.get("nomArticle")+"" ;
+            order=Integer.parseInt(jsonObject.get("order")+"" );
+        } catch (JsonIOException e) {
+            e.printStackTrace();
+        }
 //============================================
 
         gridView=findViewById(R.id.grid);
@@ -93,7 +95,6 @@ public class ReclamationActivity extends AppCompatActivity {
                     requestPermissions(new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST);
                     return;
                 }
-
                 onTakePictureClick();
 
             }
@@ -110,6 +111,13 @@ public class ReclamationActivity extends AppCompatActivity {
 //                        public Reserve(int id_user, int orderArticle, String discriminator, int num_conception, List<String> photos, String _token) {
 
 //                        reserveController.ReserveArticle(new Reserve());
+                    Toast.makeText(ReclamationActivity.this, "user" +userId+
+                            "\n desc " +discriminator+
+//                            "\n orderArticle " +order+
+//                            "\n num_conception " +num_consiption+
+//                            "\n token  " +token+
+//                            "\n photos" +stringImages+
+                            "", Toast.LENGTH_SHORT).show();
 
                 }
 
