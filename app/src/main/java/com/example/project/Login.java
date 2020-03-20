@@ -56,8 +56,8 @@ public class Login extends AppCompatActivity {
 
 //        ===============================
 
-        this.ip=new WifiConnect(getApplicationContext()).getIp();
-        this.port=new WifiConnect(getApplicationContext()).getPort();
+        this.ip=new WifiConnect(getApplicationContext(),this).getIp();
+        this.port=new WifiConnect(getApplicationContext(),this).getPort();
 //=================================
         sharedPref =getApplicationContext().getSharedPreferences("user_prefs",Context.MODE_PRIVATE);
         editor = sharedPref.edit();
@@ -89,7 +89,7 @@ public class Login extends AppCompatActivity {
         super.onStart();
 
 //        ===========================================
-        WifiConnect wifiConnect=new WifiConnect(this);
+        WifiConnect wifiConnect=new WifiConnect(this,this);
         wifiConnect.connect();
 //        ============================================
     }

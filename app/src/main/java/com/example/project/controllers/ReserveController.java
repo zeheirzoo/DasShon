@@ -1,5 +1,6 @@
 package com.example.project.controllers;
 
+import android.app.Activity;
 import android.content.Context;
 import android.widget.Toast;
 
@@ -27,10 +28,10 @@ public class ReserveController {
     private String route = "/reserve";
     private Context context = getContext();
 
-    public ReserveController(Context context) {
+    public ReserveController(Context context, Activity activity) {
         this.context = context;
-        this.ip=new WifiConnect(context).getIp();
-        this.port=new WifiConnect(context).getPort();
+        this.ip=new WifiConnect(context,activity).getIp();
+        this.port=new WifiConnect(context,activity).getPort();
     }
 
     public Context getContext() {

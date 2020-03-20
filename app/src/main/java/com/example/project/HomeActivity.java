@@ -26,7 +26,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 //        =============================
-        WifiConnect wifiConnect=new WifiConnect(this);
+        WifiConnect wifiConnect=new WifiConnect(this,this);
         wifiConnect.connect();
 //        ===============================
         BottomNavigationView navView = findViewById(R.id.nav_view);

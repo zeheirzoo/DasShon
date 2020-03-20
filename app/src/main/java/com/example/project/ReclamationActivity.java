@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.project.controllers.ReserveController;
+import com.example.project.models.Reclamation;
 import com.example.project.models.Reserve;
 import com.example.project.network.WifiConnect;
 import com.example.project.ui.product.GridProductAdapter;
@@ -58,7 +59,7 @@ public class ReclamationActivity extends AppCompatActivity {
        getSupportActionBar().setTitle("Reclamation");
 
 //        =============================
-        WifiConnect wifiConnect=new WifiConnect(this);
+        WifiConnect wifiConnect=new WifiConnect(this,this);
         wifiConnect.connect();
 //        ========================================
 //============================================
@@ -108,7 +109,7 @@ public class ReclamationActivity extends AppCompatActivity {
                 if (adapter.getCount()==0){
                     Toast.makeText(ReclamationActivity.this, "Capturer la panne", Toast.LENGTH_SHORT).show();
                 }else{
-                    ReserveController reserveController=new ReserveController(getApplicationContext());
+                    ReserveController reserveController=new ReserveController(getApplicationContext(), ReclamationActivity.this);
                     reserveController.ReserveArticle(new Reserve(userId,order,discriminator,num_consiption,stringImages),token);
                     progress();
 

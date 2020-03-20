@@ -26,9 +26,9 @@ public class WifiConnect {
     private  String ip = "192.168.43.207";
 
     private WifiManager wifiManager;
-    public WifiConnect(Context context) {
+    public WifiConnect(Context context,Activity activity) {
         this.context=context;
-        this.activity=(Activity)context;
+        this.activity=activity;
     }
 
     public void connect(){

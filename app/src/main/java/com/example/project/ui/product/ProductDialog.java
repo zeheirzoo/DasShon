@@ -90,7 +90,7 @@ TextView article_name,cliet_name,num_consiption,order;
                 Toast.makeText(getContext(),result.getText(), Toast.LENGTH_SHORT).show();
 
                 progress();
-                ValidatController validatController=new ValidatController(getContext());
+                ValidatController validatController=new ValidatController(getContext(),getOwnerActivity());
                 validatController.ValidateArticle(new Valid(userId,orderArt,discriminator,num_con),token);
                 dismiss();
             }

@@ -1,5 +1,6 @@
 package com.example.project.controllers;
 
+  import android.app.Activity;
   import android.content.Context;
         import android.content.Intent;
   import android.widget.Toast;
@@ -29,12 +30,10 @@ public class ValidatController {
 
     private Context context = getContext();
 
-    public ValidatController(Context context) {
+    public ValidatController(Context context, Activity activity) {
         this.context = context;
-
-
-        this.ip=new WifiConnect(context).getIp();
-        this.port=new WifiConnect(context).getPort();
+        this.ip=new WifiConnect(context,activity).getIp();
+        this.port=new WifiConnect(context,activity).getPort();
     }
 
     public Context getContext() {
