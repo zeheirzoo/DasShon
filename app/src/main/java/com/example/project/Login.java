@@ -45,11 +45,19 @@ public class Login extends AppCompatActivity {
     JSONObject body;
     SharedPreferences.Editor editor;
     SharedPreferences sharedPref;
+    private  String ip ;
+    private int port ;
+    private String route = "/user/login";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         getSupportActionBar().hide();
+
+//        ===============================
+
+        this.ip=new WifiConnect(getApplicationContext()).getIp();
+        this.port=new WifiConnect(getApplicationContext()).getPort();
 //=================================
         sharedPref =getApplicationContext().getSharedPreferences("user_prefs",Context.MODE_PRIVATE);
         editor = sharedPref.edit();
@@ -89,7 +97,9 @@ public class Login extends AppCompatActivity {
     public void loginUser(String nom, String password){
         progress();
         RequestQueue queue= Volley.newRequestQueue(getApplicationContext());
-        String url="http://192.168.43.207:8000/user/login";
+
+
+        String url = "http://" + ip + ":" + port + route;;
 //        String url="https://api.myjson.com/bins/11ka5w";
 
         body = new JSONObject();

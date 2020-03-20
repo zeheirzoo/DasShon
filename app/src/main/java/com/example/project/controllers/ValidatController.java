@@ -26,6 +26,7 @@ public class ValidatController {
     private  int port ;
     private  String ip ;
     private String route = "/valid";
+
     private Context context = getContext();
 
     public ValidatController(Context context) {
