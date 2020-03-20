@@ -66,7 +66,7 @@ public class Login extends AppCompatActivity {
        String token = sharedPref.getString("token", "");
        String discriminator = sharedPref.getString("discriminator", "");
 
-       if (userId>-1 && discriminator.length()>0 && token.length()>0){
+       if (userId>-1 && !discriminator.isEmpty() && !token.isEmpty()){
            Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
            startActivity(intent);
            finish();

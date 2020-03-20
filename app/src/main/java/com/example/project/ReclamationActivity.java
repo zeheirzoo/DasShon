@@ -5,8 +5,10 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -15,11 +17,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.example.project.controllers.ReserveController;
@@ -182,6 +188,49 @@ public class ReclamationActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.action_bar_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    // handle button activities
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.nav_logout) {
+            AlertDialog.Builder builder= new AlertDialog.Builder(this);
+            builder.setTitle("Deconnecter ");
+            builder.setMessage("menk bsa7.......... ?");
+            builder.setIcon(R.drawable.ic_warning_black_24dp);
+            builder.setNegativeButton("exit", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            builder.setPositiveButton("Deconnecter ", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    logout();
+                }
+            });
+            builder.create();
+            builder.show();
+
+            return true;
+        }
 
 
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void logout() {
+
+        sharedPref.edit().clear().commit();
+        startActivity(new Intent(ReclamationActivity.this,Login.class));
+        finish();
+    }
 }
