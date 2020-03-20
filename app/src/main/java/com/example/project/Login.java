@@ -61,7 +61,19 @@ public class Login extends AppCompatActivity {
 //=================================
         sharedPref =getApplicationContext().getSharedPreferences("user_prefs",Context.MODE_PRIVATE);
         editor = sharedPref.edit();
+        SharedPreferences sharedPref =this.getSharedPreferences("user_prefs",Context.MODE_PRIVATE);
+       int  userId = sharedPref.getInt("user_id", -1);
+       String token = sharedPref.getString("token", "");
+       String discriminator = sharedPref.getString("discriminator", "");
 
+       if (userId>-1 && discriminator.length()>0 && token.length()>0){
+           Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+           startActivity(intent);
+           finish();
+       }
+
+
+//        =======================================
 //=================================
         nomE=findViewById(R.id.til_email);
         passwordE=findViewById(R.id.til_password);
