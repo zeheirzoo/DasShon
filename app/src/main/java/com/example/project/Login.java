@@ -86,6 +86,9 @@ public class Login extends AppCompatActivity {
                 nom=nomE.getEditText().getText().toString();
                 password=passwordE.getEditText().getText().toString();
                 if (nom.isEmpty() && password.isEmpty()) {
+                    nomE.setError("Nom D\'utilisateur vide !");
+                    passwordE.setError("Mot de Pass vide !");
+
                     Toast.makeText(getApplicationContext(), "champs  vides", Toast.LENGTH_LONG).show();
                 }else{
                     loginUser(nom, password);

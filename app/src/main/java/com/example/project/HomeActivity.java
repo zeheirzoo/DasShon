@@ -48,11 +48,11 @@ public class HomeActivity extends AppCompatActivity {
         String token = sharedPref.getString("token", "");
         String discriminator = sharedPref.getString("discriminator", "");
 //
-//        if (userId>-1 || discriminator.length()>0 || token.length()>0){
-//            Intent intent = new Intent(getApplicationContext(), Login.class);
-//            startActivity(intent);
-//            finish();
-//        }
+        if (userId==-1 || discriminator.isEmpty() || token.isEmpty()){
+            Intent intent = new Intent(getApplicationContext(), Login.class);
+            startActivity(intent);
+            finish();
+        }
 //        =======================================
         BottomNavigationView navView = findViewById(R.id.nav_view);
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder( R.id.navigation_dashboard, R.id.navigation_notifications).build();

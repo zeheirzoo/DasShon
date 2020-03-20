@@ -58,7 +58,6 @@ TextView article_name,cliet_name,num_consiption,order;
         num_consiption=findViewById(R.id.num_conception);
         article_name=findViewById(R.id.article_name);
         order=findViewById(R.id.order_val);
-        order=findViewById(R.id.order_val);
         Gson gson=new Gson();
          jsonObject=gson.fromJson(this.result.getText(),JsonObject.class);
 
@@ -87,12 +86,13 @@ TextView article_name,cliet_name,num_consiption,order;
         accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(),result.getText(), Toast.LENGTH_SHORT).show();
-
-                progress();
-                ValidatController validatController=new ValidatController(getContext(),getOwnerActivity());
-                validatController.ValidateArticle(new Valid(userId,orderArt,discriminator,num_con),token);
                 dismiss();
+                ValidatController validatController=new ValidatController(getContext(),getOwnerActivity());
+                orderArt=Integer.parseInt(order.getText().toString());
+                num_con=Integer.parseInt(num_consiption.getText().toString());
+                validatController.ValidateArticle(new Valid(userId,orderArt,discriminator,num_con),token);
+                progress();
+
             }
         });
     }
@@ -115,6 +115,7 @@ TextView article_name,cliet_name,num_consiption,order;
                     e.printStackTrace();
                 }
                 progressDialog.dismiss();
+
             }
         }).start();
     }
