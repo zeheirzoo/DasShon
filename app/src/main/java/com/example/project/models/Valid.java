@@ -6,24 +6,16 @@ public class Valid {
     int orderArticle;
     String discriminator;
     int num_conception;
-    String _token;
 
 
-    public Valid(int id_user, int orderArticle, String discriminator, int num_conception, String _token) {
+    public Valid(int id_user, int orderArticle, String discriminator, int num_conception) {
         this.id_user = id_user;
         this.orderArticle = orderArticle;
         this.discriminator = discriminator;
         this.num_conception = num_conception;
-        this._token = _token;
+
     }
 
-    public String get_token() {
-        return _token;
-    }
-
-    public void set_token(String _token) {
-        this._token = _token;
-    }
 
     public int getId_user() {
         return id_user;

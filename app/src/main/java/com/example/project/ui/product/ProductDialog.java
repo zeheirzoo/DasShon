@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +15,8 @@ import android.widget.Toast;
 
 import com.example.project.R;
 import com.example.project.ReclamationActivity;
+import com.example.project.controllers.ValidatController;
+import com.example.project.models.Valid;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
@@ -28,6 +31,9 @@ Context activity;
 TextView article_name,cliet_name,num_consiption,order;
     Button accept,reject;
     JsonObject jsonObject;
+
+    String discriminator,token;
+    int userId,num_con,orderArt;
     public ProductDialog(@NonNull Context context, Result result) {
         super(context);
         this.result=result;
@@ -38,11 +44,20 @@ TextView article_name,cliet_name,num_consiption,order;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
+//        =======================================
+        SharedPreferences sharedPref =getContext().getSharedPreferences("user_prefs",Context.MODE_PRIVATE);
+        userId = sharedPref.getInt("user_id", -1);
+        token = sharedPref.getString("token", "");
+        discriminator = sharedPref.getString("discriminator", "");
+
+//        =======================================
+
         accept= findViewById(R.id.accept);
         reject=findViewById(R.id.reject);
         cliet_name=findViewById(R.id.client_name);
         num_consiption=findViewById(R.id.num_conception);
         article_name=findViewById(R.id.article_name);
+        order=findViewById(R.id.order_val);
         order=findViewById(R.id.order_val);
         Gson gson=new Gson();
          jsonObject=gson.fromJson(this.result.getText(),JsonObject.class);
@@ -75,9 +90,8 @@ TextView article_name,cliet_name,num_consiption,order;
                 Toast.makeText(getContext(),result.getText(), Toast.LENGTH_SHORT).show();
 
                 progress();
-          //      HomeActivity homeActivity=new HomeActivity();
-
-                //     homeActivity.validate();
+                ValidatController validatController=new ValidatController(getContext());
+                validatController.ValidateArticle(new Valid(userId,orderArt,discriminator,num_con),token);
                 dismiss();
             }
         });

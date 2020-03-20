@@ -32,6 +32,7 @@ import com.google.gson.JsonObject;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ReclamationActivity extends AppCompatActivity {
     private final static int CAMERA_REQUEST = 2;
@@ -42,7 +43,7 @@ public class ReclamationActivity extends AppCompatActivity {
     private GridView gridView;
     ArrayList<Bitmap> bitmaps;
     GridProductAdapter adapter;
-    ArrayList<String> stringImages = new ArrayList<String>();
+    List<String> stringImages = new ArrayList<String>();
     String discriminator,token;
     int userId;
     String article_name,cliet_name;
@@ -100,24 +101,16 @@ public class ReclamationActivity extends AppCompatActivity {
             }
         });
 
-        Button button=findViewById(R.id.send);
-        button.setOnClickListener(new View.OnClickListener() {
+        Button send=findViewById(R.id.send);
+        send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (adapter.getCount()==0){
                     Toast.makeText(ReclamationActivity.this, "Capturer la panne", Toast.LENGTH_SHORT).show();
                 }else{
                     ReserveController reserveController=new ReserveController(getApplicationContext());
-//                        public Reserve(int id_user, int orderArticle, String discriminator, int num_conception, List<String> photos, String _token) {
-
-//                        reserveController.ReserveArticle(new Reserve());
-                    Toast.makeText(ReclamationActivity.this, "user" +userId+
-                            "\n desc " +discriminator+
-//                            "\n orderArticle " +order+
-//                            "\n num_conception " +num_consiption+
-//                            "\n token  " +token+
-//                            "\n photos" +stringImages+
-                            "", Toast.LENGTH_SHORT).show();
+                    reserveController.ReserveArticle(new Reserve(userId,order,discriminator,num_consiption,stringImages),token);
+                    progress();
 
                 }
 
@@ -167,8 +160,8 @@ public class ReclamationActivity extends AppCompatActivity {
     }
 
 
+     ProgressDialog progressDialog;
     public void progress(){
-        final ProgressDialog progressDialog;
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(""); // Setting Message
         progressDialog.setTitle(""); // Setting Title

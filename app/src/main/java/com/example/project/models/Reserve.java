@@ -9,7 +9,6 @@ public class Reserve {
     String discriminator;
     int num_conception;
     List<String> photos;
-    String _token;
 
 
     public Reserve(int id_user, int orderArticle, String discriminator, int num_conception, List<String> photos) {
@@ -18,21 +17,12 @@ public class Reserve {
         this.discriminator = discriminator;
         this.num_conception = num_conception;
         this.photos = photos;
-//        this._token = _token;
     }
 
     public Reserve(int id) {
         this.id_user=id;
-
     }
 
-    public String get_token() {
-        return _token;
-    }
-
-    public void set_token(String _token) {
-        this._token = _token;
-    }
 
     public List<String> getPhotos() {
         return photos;

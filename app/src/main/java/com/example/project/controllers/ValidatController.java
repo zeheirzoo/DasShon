@@ -12,6 +12,7 @@ package com.example.project.controllers;
         import com.android.volley.toolbox.JsonObjectRequest;
         import com.android.volley.toolbox.Volley;
   import com.example.project.models.Valid;
+  import com.example.project.network.WifiConnect;
   import com.google.gson.Gson;
 
         import org.json.JSONObject;
@@ -22,13 +23,17 @@ package com.example.project.controllers;
 
 public class ValidatController {
 
-    private final int port = 9090;
-    private final String ip = "192.168.43.207";
+    private  int port ;
+    private  String ip ;
     private String route = "/valid";
     private Context context = getContext();
 
     public ValidatController(Context context) {
         this.context = context;
+
+
+        this.ip=new WifiConnect(context).getIp();
+        this.port=new WifiConnect(context).getPort();
     }
 
     public Context getContext() {

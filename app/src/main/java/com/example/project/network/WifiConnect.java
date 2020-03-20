@@ -21,6 +21,10 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 public class WifiConnect {
     Context context;
     Activity activity;
+
+    private  int port = 9090;
+    private  String ip = "192.168.43.207";
+
     private WifiManager wifiManager;
     public WifiConnect(Context context) {
         this.context=context;
@@ -66,4 +70,19 @@ public class WifiConnect {
         ActivityCompat.requestPermissions(activity, new String[]{CAMERA,INTERNET,WRITE_EXTERNAL_STORAGE,ACCESS_NETWORK_STATE,CHANGE_WIFI_STATE,ACCESS_WIFI_STATE }, 1);
     }
 
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
 }

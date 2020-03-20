@@ -89,105 +89,105 @@ public class Login extends AppCompatActivity {
     public void loginUser(String nom, String password){
         progress();
         RequestQueue queue= Volley.newRequestQueue(getApplicationContext());
-//        String url="http://192.168.43.207:8000/user/loginA";
-        String url="https://api.myjson.com/bins/11ka5w";
+        String url="http://192.168.43.207:8000/user/login";
+//        String url="https://api.myjson.com/bins/11ka5w";
 
-//        body = new JSONObject();
-//        try {
-//
-//            body.put("nom",nom);
-//            body.put("password",password);
-//        }catch (JSONException e){
-//
-//        }
-//
-//        JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.POST, url, body, new Response.Listener<JSONObject>() {
-//            @Override
-//            public void onResponse(JSONObject response) {
-//
-//                if (response!=null){
-//                    try {
-//                        JSONObject success= (JSONObject) response.get("success");
-//                        JSONObject user= (JSONObject) success.get("user");
-//
-//                        editor.putString("token", success.getString("token"));
-//                        editor.putInt("user_id", user.getInt("id"));
-//                        editor.putString("discriminator", user.getString("discriminator"));
-//                        editor.commit();
-//                        progressDialog.dismiss();
-//
-//                        Toast.makeText(Login.this, " welcome ", Toast.LENGTH_SHORT).show();
-//                        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-//                        startActivity(intent);
-//                        finish();
-//                    } catch (JSONException e) {
-//                        progressDialog.dismiss();
-//
-//                        e.printStackTrace();
-//                    }
-//                }else{
-//                    nomE.setError("Nom D\'utilisateur incorrect !");
-//                    passwordE.setError("Mot de Pass incorrect !");
-//
-//                }
-//
-//
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Toast.makeText(Login.this, "Server Error !! Check your connection " , Toast.LENGTH_SHORT).show();
-//
-//
-//
-//            }
-//        });
-//        queue.add(jsonObjectRequest);
+        body = new JSONObject();
+        try {
 
+            body.put("nom",nom);
+            body.put("password",password);
+        }catch (JSONException e){
 
+        }
 
-
-        StringRequest request=new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+        JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.POST, url, body, new Response.Listener<JSONObject>() {
             @Override
-            public void onResponse(String response) {
-                if (!response.isEmpty()){
-                    Gson gson=new Gson();
-                    JsonObject resJson=gson.fromJson(response, JsonObject.class);
+            public void onResponse(JSONObject response) {
 
+                if (response!=null){
                     try {
-                        JsonObject success= (JsonObject) resJson.get("success");
-                        JsonObject user= (JsonObject) success.get("user");
+                        JSONObject success= (JSONObject) response.get("success");
+                        JSONObject user= (JSONObject) success.get("user");
 
-                        editor.putString("token", success.get("token")+"");
-                        editor.putString("discriminator", user.get("discriminator")+"");
-                        editor.putInt("user_id",Integer.parseInt(user.get("id")+""));
-
+                        editor.putString("token", success.getString("token"));
+                        editor.putInt("user_id", user.getInt("id"));
+                        editor.putString("discriminator", user.getString("discriminator"));
                         editor.commit();
+                        progressDialog.dismiss();
 
-
-
-                        SharedPreferences sharedPref =getPreferences(Context.MODE_PRIVATE);
-                        String discriminator = sharedPref.getString("discriminator", "");
-
-                        Toast.makeText(Login.this, " welcome " + discriminator, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Login.this, " welcome ", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                         startActivity(intent);
                         finish();
-                    } catch (JsonIOException e) {
+                    } catch (JSONException e) {
+                        progressDialog.dismiss();
+
                         e.printStackTrace();
-                        Toast.makeText(Login.this, "exception  " +e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
+                }else{
+                    nomE.setError("Nom D\'utilisateur incorrect !");
+                    passwordE.setError("Mot de Pass incorrect !");
+
                 }
+
+
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(Login.this, "error  " +error.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(Login.this, "Server Error !! Check your connection " , Toast.LENGTH_SHORT).show();
+
+
 
             }
         });
-                queue.add(request);
+        queue.add(jsonObjectRequest);
 
+
+
+//
+//        StringRequest request=new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+//                if (!response.isEmpty()){
+//                    Gson gson=new Gson();
+//                    JsonObject resJson=gson.fromJson(response, JsonObject.class);
+//
+//                    try {
+//                        JsonObject success= (JsonObject) resJson.get("success");
+//                        JsonObject user= (JsonObject) success.get("user");
+//
+//                        editor.putString("token", success.get("token")+"");
+//                        editor.putString("discriminator", user.get("discriminator")+"");
+//                        editor.putInt("user_id",Integer.parseInt(user.get("id")+""));
+//
+//                        editor.commit();
+//
+//
+//
+//                        SharedPreferences sharedPref =getPreferences(Context.MODE_PRIVATE);
+//                        String discriminator = sharedPref.getString("discriminator", "");
+//
+//                        Toast.makeText(Login.this, " welcome " + discriminator, Toast.LENGTH_SHORT).show();
+//                        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+//                        startActivity(intent);
+//                        finish();
+//                    } catch (JsonIOException e) {
+//                        e.printStackTrace();
+//                        Toast.makeText(Login.this, "exception  " +e.getMessage(), Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Toast.makeText(Login.this, "error  " +error.toString(), Toast.LENGTH_SHORT).show();
+//
+//            }
+//        });
+//                queue.add(request);
+//
 
     }
      ProgressDialog progressDialog;
@@ -197,6 +197,7 @@ public class Login extends AppCompatActivity {
         progressDialog.setMessage("Loading ....... "); // Setting Message
         progressDialog.setTitle("Login "); // Setting Title
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
+//        progressDialog.set // Progress Dialog Style Spinner
         progressDialog.show(); // Display Progress Dialog
         progressDialog.setCancelable(false);
         new Thread(new Runnable() {
