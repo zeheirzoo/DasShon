@@ -52,39 +52,39 @@ public class ValidatController {
         String jsonObject = gson.toJson(valid,Valid.class);
         JSONObject jsonBody = gson.fromJson(jsonObject,JSONObject.class);
         Toast.makeText(context, "json body"+jsonObject, Toast.LENGTH_SHORT).show();
-//        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, url, jsonBody, new Response.Listener<JSONObject>() {
-//
-//            @Override
-//            public void onResponse(JSONObject response) {
-//
-//                if(response.length()>0){
-//
-//                    Toast.makeText(context, "Response:  " +response, Toast.LENGTH_SHORT).show();
-//
-//                }else{
-//
-//                    Toast.makeText(context,"response empty"+response,Toast.LENGTH_SHORT).show();
-//
-//                }
-//            }
-//
-//        },new Response.ErrorListener(){
-//
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Toast.makeText(context, "Response:  " + error.toString(),Toast.LENGTH_LONG).show();
-//            }
-//        } ){
-//            @Override
-//            public Map<String, String> getHeaders() {
-//                Map<String, String> params = new HashMap<>();
-//                params.put("Accept", "application/json");
-//                params.put("Authorization", "Bearer "+_token);
-//
-//                return params;
-//            }
-//        }
-//       ;
-//        requestQueue.add(jsonObjectRequest);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, url, jsonBody, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+
+                if(response.length()>0){
+
+                    Toast.makeText(context, "Response:  " +response, Toast.LENGTH_SHORT).show();
+
+                }else{
+
+                    Toast.makeText(context,"response empty"+response,Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+        },new Response.ErrorListener(){
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "Response:  " + error.toString(),Toast.LENGTH_LONG).show();
+            }
+        } ){
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("Accept", "application/json");
+                params.put("Authorization", "Bearer "+_token);
+
+                return params;
+            }
+        }
+       ;
+        requestQueue.add(jsonObjectRequest);
     }
 }

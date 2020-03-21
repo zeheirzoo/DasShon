@@ -78,7 +78,7 @@ public class ReclamationActivity extends AppCompatActivity {
         String result=getIntent().getStringExtra("result");
         Gson gson=new Gson();
         jsonObject=gson.fromJson(result, JsonObject.class);
-
+//        Toast.makeText(this, ""+result, Toast.LENGTH_SHORT).show();
         try {
             cliet_name=jsonObject.get("nomClient")+"" ;
             num_consiption=Integer.parseInt(jsonObject.get("num_conception")+"");
