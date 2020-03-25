@@ -73,9 +73,7 @@ private int i=0;
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_notifications, container, false);
         createNotificationChannel();
-      
-
-
+        showNotification ("dert diga ah .....");
 //        ============================================
         sharedPref =getContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
         editor = sharedPref.edit();
