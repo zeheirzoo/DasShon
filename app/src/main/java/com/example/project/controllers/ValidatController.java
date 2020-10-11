@@ -26,7 +26,7 @@ public class ValidatController {
 
     private  int port ;
     private  String ip ;
-    private String route = "/valid";
+    private String route = "/api/valid";
 
     private Context context = getContext();
 
@@ -51,7 +51,8 @@ public class ValidatController {
         Gson gson =new Gson();
         String jsonObject = gson.toJson(valid,Valid.class);
         JSONObject jsonBody = gson.fromJson(jsonObject,JSONObject.class);
-        Toast.makeText(context, "json body"+jsonObject, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "json body"+jsonBody, Toast.LENGTH_SHORT).show();
+
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, url, jsonBody, new Response.Listener<JSONObject>() {
 
             @Override
@@ -72,7 +73,7 @@ public class ValidatController {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "Response:  " + error.toString(),Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Response:  " + error.getCause(),Toast.LENGTH_LONG).show();
             }
         } ){
             @Override

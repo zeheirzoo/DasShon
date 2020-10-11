@@ -57,14 +57,13 @@ Vibrator vibrator;
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        ProductDialog productDialog=new ProductDialog(activity,result);
+                        ProductDialog productDialog=new ProductDialog(activity,result,mCodeScanner);
 //                        productDialog.setCancelable(false);
                         scannerView.setFrameColor(Color.GREEN);
                         if (vibrator.hasVibrator()) {
                             vibrator.vibrate(200); // for 500 ms
                         }
                         productDialog.show();
-                         mCodeScanner.startPreview();
 
                     }
 

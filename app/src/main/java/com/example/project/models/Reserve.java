@@ -1,18 +1,23 @@
 package com.example.project.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class Reserve {
 
-    int id_user;
+    @SerializedName("user_id")
+    int user_id;
+    @SerializedName("order")
     int orderArticle;
     String discriminator;
     int num_conception;
+    @SerializedName("filenames")
     List<String> photos;
 
 
-    public Reserve(int id_user, int orderArticle, String discriminator, int num_conception, List<String> photos) {
-        this.id_user = id_user;
+    public Reserve(int user_id, int orderArticle, String discriminator, int num_conception, List<String> photos) {
+        this.user_id = user_id;
         this.orderArticle = orderArticle;
         this.discriminator = discriminator;
         this.num_conception = num_conception;
@@ -20,7 +25,7 @@ public class Reserve {
     }
 
     public Reserve(int id) {
-        this.id_user=id;
+        this.user_id=id;
     }
 
 
@@ -33,11 +38,11 @@ public class Reserve {
     }
 
     public int getId_user() {
-        return id_user;
+        return user_id;
     }
 
-    public void setId_user(int id_user) {
-        this.id_user = id_user;
+    public void setId_user(int user_id) {
+        this.user_id = user_id;
     }
 
     public int getOrderArticle() {

@@ -25,7 +25,7 @@ public class ReserveController {
     private  int port;
     private  String ip;
 
-    private String route = "/reserve";
+    private String route = "/api/reserve";
     private Context context = getContext();
 
     public ReserveController(Context context, Activity activity) {
@@ -49,6 +49,8 @@ public class ReserveController {
         Gson gson =new Gson();
         String jsonObject = gson.toJson(reserve,Reserve.class);
         JSONObject jsonBody = gson.fromJson(jsonObject,JSONObject.class);
+        Toast.makeText(context, "json body"+jsonBody, Toast.LENGTH_SHORT).show();
+
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonBody, new Response.Listener<JSONObject>() {
 
             @Override

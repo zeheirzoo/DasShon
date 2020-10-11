@@ -47,7 +47,7 @@ public class Login extends AppCompatActivity {
     SharedPreferences sharedPref;
     private  String ip ;
     private int port ;
-    private String route = "/user/login";
+    private String route = "/api/dasSchon/login";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -161,7 +161,7 @@ public class Login extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(Login.this, "Server Error !! Check your connection " , Toast.LENGTH_SHORT).show();
+                Toast.makeText(Login.this, "Server Error !! Check your connection " +error.getCause(), Toast.LENGTH_SHORT).show();
 
 
 

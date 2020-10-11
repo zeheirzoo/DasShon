@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.budiyev.android.codescanner.CodeScanner;
 import com.example.project.R;
 import com.example.project.ReclamationActivity;
 import com.example.project.controllers.ValidatController;
@@ -31,13 +32,14 @@ Context activity;
 TextView article_name,cliet_name,num_consiption,order;
     Button accept,reject;
     JsonObject jsonObject;
-
+    private CodeScanner mCodeScanner;
     String discriminator,token;
     int userId,num_con,orderArt;
-    public ProductDialog(@NonNull Context context, Result result) {
+    public ProductDialog(@NonNull Context context, Result result, CodeScanner mCodeScanner) {
         super(context);
         this.result=result;
         this.activity=context;
+        this.mCodeScanner=mCodeScanner;
     }
 
     @Override
@@ -77,6 +79,7 @@ TextView article_name,cliet_name,num_consiption,order;
                 Intent intent=new Intent(activity, ReclamationActivity.class);
                 intent.putExtra("result",result.getText());
                 activity.startActivity(intent);
+                mCodeScanner.startPreview();
 
             }
         });
@@ -92,6 +95,7 @@ TextView article_name,cliet_name,num_consiption,order;
                 num_con=Integer.parseInt(num_consiption.getText().toString());
                 validatController.ValidateArticle(new Valid(userId,orderArt,discriminator,num_con),token);
                 progress();
+                mCodeScanner.startPreview();
 
             }
         });

@@ -63,7 +63,6 @@ public class ReclamationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reclamation);
        getSupportActionBar().setTitle("Reclamation");
-
 //        =============================
         WifiConnect wifiConnect=new WifiConnect(this,this);
         wifiConnect.connect();

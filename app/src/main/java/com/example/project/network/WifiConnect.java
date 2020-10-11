@@ -22,8 +22,8 @@ public class WifiConnect {
     Context context;
     Activity activity;
 
-    private  int port = 9090;
-    private  String ip = "192.168.43.207";
+    private  int port = 8000;
+    private  String ip = "192.168.43.8";
 
     private WifiManager wifiManager;
     public WifiConnect(Context context,Activity activity) {
