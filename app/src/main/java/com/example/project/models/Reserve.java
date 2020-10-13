@@ -9,19 +9,19 @@ public class Reserve {
     @SerializedName("user_id")
     int user_id;
     @SerializedName("order")
-    int orderArticle;
+    int order;
     String discriminator;
     int num_conception;
     @SerializedName("filenames")
-    List<String> photos;
+    List<String> filenames;
 
 
-    public Reserve(int user_id, int orderArticle, String discriminator, int num_conception, List<String> photos) {
+    public Reserve(int user_id, int order, String discriminator, int num_conception, List<String> filenames) {
         this.user_id = user_id;
-        this.orderArticle = orderArticle;
+        this.order = order;
         this.discriminator = discriminator;
         this.num_conception = num_conception;
-        this.photos = photos;
+        this.filenames = filenames;
     }
 
     public Reserve(int id) {
@@ -30,11 +30,11 @@ public class Reserve {
 
 
     public List<String> getPhotos() {
-        return photos;
+        return filenames;
     }
 
-    public void setPhotos(List<String> photos) {
-        this.photos = photos;
+    public void setPhotos(List<String> filenames) {
+        this.filenames = filenames;
     }
 
     public int getId_user() {
@@ -46,11 +46,11 @@ public class Reserve {
     }
 
     public int getOrderArticle() {
-        return orderArticle;
+        return order;
     }
 
-    public void setOrderArticle(int orderArticle) {
-        this.orderArticle = orderArticle;
+    public void setOrderArticle(int order) {
+        this.order = order;
     }
 
     public String getDiscriminator() {

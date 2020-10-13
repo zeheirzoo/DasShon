@@ -116,17 +116,9 @@ public class ReclamationActivity extends AppCompatActivity {
                 }else{
                     ReserveController reserveController=new ReserveController(getApplicationContext(), ReclamationActivity.this);
                     reserveController.ReserveArticle(new Reserve(userId,order,discriminator,num_consiption,stringImages),token);
-                    progress();
-
                 }
-
-
             }
         });
-
-
-
-
     }
 
 
@@ -163,27 +155,6 @@ public class ReclamationActivity extends AppCompatActivity {
 
 
         }
-    }
-
-
-     ProgressDialog progressDialog;
-    public void progress(){
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage(""); // Setting Message
-        progressDialog.setTitle(""); // Setting Title
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
-        progressDialog.show(); // Display Progress Dialog
-        progressDialog.setCancelable(false);
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    Thread.sleep(10000);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                progressDialog.dismiss();
-            }
-        }).start();
     }
 
 

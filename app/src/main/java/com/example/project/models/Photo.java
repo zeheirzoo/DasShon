@@ -4,16 +4,15 @@ import java.util.Date;
 
 public class Photo {
 
-    int id_photo;
+    int id;
     String path;
-   // Date date;
 
 
     public int getId_photo() {
-        return id_photo;
+        return id;
     }
-    public void setId_photo(int id_photo) {
-        this.id_photo = id_photo;
+    public void setId_photo(int id) {
+        this.id = id;
     }
 
 
@@ -43,10 +42,9 @@ public class Photo {
 
     @Override
     public String toString() {
-        return "Photo{" +
-                "id_photo=" + id_photo +
+        return "{" +
+                "id=" + id +
                 ", path='" + path + '\'' +
-            //    ", date=" + date +
                 '}';
     }
 }

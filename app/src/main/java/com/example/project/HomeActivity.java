@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import com.example.project.controllers.SocketController;
 import com.example.project.network.WifiConnect;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -27,10 +28,13 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.WebSocket;
 
 
 public class HomeActivity extends AppCompatActivity {
+    private WebSocket webSocket;
 
     SharedPreferences sharedPref;
     @Override
@@ -47,27 +51,32 @@ public class HomeActivity extends AppCompatActivity {
         int  userId = sharedPref.getInt("user_id", -1);
         String token = sharedPref.getString("token", "");
         String discriminator = sharedPref.getString("discriminator", "");
+//        Toast.makeText(this, ""+sharedPref.getAll(), Toast.LENGTH_SHORT).show();
 //
-//        if (userId==-1 || discriminator.isEmpty() || token.isEmpty()){
-//            Intent intent = new Intent(getApplicationContext(), Login.class);
-//            startActivity(intent);
-//            finish();
-//        }
+        if (userId==-1 || discriminator.isEmpty() || token.isEmpty()){
+            Intent intent = new Intent(getApplicationContext(), Login.class);
+            startActivity(intent);
+            finish();
+        }
 //        =======================================
         BottomNavigationView navView = findViewById(R.id.nav_view);
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder( R.id.navigation_dashboard, R.id.navigation_notifications).build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
-//         navView.getMenu().getItem(1).set;
+//
 
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        instantiateWebSocket();
+        }
 
-    }
+
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.action_bar_menu, menu);
@@ -116,7 +125,17 @@ public class HomeActivity extends AppCompatActivity {
 //
 
 
+    private void instantiateWebSocket() {
+        OkHttpClient client = new OkHttpClient();
+        String ip=new WifiConnect(getBaseContext(),this).getIp();
+       int port=new WifiConnect(getBaseContext(),this).getPort();
+        String url = "ws://" + ip + ":" + port + "/api/reserve";
+        //replace x.x.x.x with your machine's IP Address
+        Request request = new Request.Builder().url(url).build();
+        SocketController socketListener = new SocketController(this);
+        webSocket = client.newWebSocket(request, socketListener);
 
+    }
 
 
 }

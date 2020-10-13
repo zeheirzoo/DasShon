@@ -3,6 +3,7 @@ package com.example.project.controllers;
   import android.app.Activity;
   import android.content.Context;
         import android.content.Intent;
+  import android.util.Log;
   import android.widget.Toast;
 
   import com.android.volley.Request;
@@ -16,7 +17,8 @@ package com.example.project.controllers;
   import com.example.project.network.WifiConnect;
   import com.google.gson.Gson;
 
-        import org.json.JSONObject;
+  import org.json.JSONException;
+  import org.json.JSONObject;
 
   import java.util.HashMap;
   import java.util.Map;
@@ -45,13 +47,31 @@ public class ValidatController {
     }
 
     public void ValidateArticle(Valid valid, final String _token){
-
+//valid.setId_user(1);
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         String url = "http://" + ip + ":" + port + route;
         Gson gson =new Gson();
-        String jsonObject = gson.toJson(valid,Valid.class);
-        JSONObject jsonBody = gson.fromJson(jsonObject,JSONObject.class);
-        Toast.makeText(context, "json body"+jsonBody, Toast.LENGTH_SHORT).show();
+//        String jsonObject = gson.toJson(valid,Valid.class);
+//        Toast.makeText(context, "json body"+jsonObject, Toast.LENGTH_SHORT).show();
+//
+//        JSONObject jsonBody = gson.fromJson(jsonObject,JSONObject.class);
+//        Toast.makeText(context, "json body"+jsonBody, Toast.LENGTH_SHORT).show();
+
+// int user_id;
+//    @SerializedName("order")
+//    int order;
+//    String discriminator;
+//    int num_conception;
+        JSONObject jsonBody  = new JSONObject();
+        try {
+            jsonBody.put("user_id",valid.getId_user());
+            jsonBody.put("order",valid.getOrderArticle());
+            jsonBody.put("discriminator",valid.getDiscriminator());
+            jsonBody.put("num_conception",valid.getNum_conception());
+        }catch (JSONException e){
+
+        }
+
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, url, jsonBody, new Response.Listener<JSONObject>() {
 
@@ -73,7 +93,7 @@ public class ValidatController {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "Response:  " + error.getCause(),Toast.LENGTH_LONG).show();
+                Log.i("validError", "Response error:  " + error.getCause()+"Response error:  " + error.getLocalizedMessage());
             }
         } ){
             @Override

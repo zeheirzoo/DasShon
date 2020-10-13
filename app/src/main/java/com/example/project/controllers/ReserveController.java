@@ -1,6 +1,7 @@
 package com.example.project.controllers;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.widget.Toast;
 
@@ -10,13 +11,17 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.project.models.Reclamation;
 import com.example.project.models.Reserve;
 import com.example.project.network.WifiConnect;
 import com.google.gson.Gson;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -32,7 +37,10 @@ public class ReserveController {
         this.context = context;
         this.ip=new WifiConnect(context,activity).getIp();
         this.port=new WifiConnect(context,activity).getPort();
+
     }
+
+
 
     public Context getContext() {
         return context;
@@ -45,20 +53,34 @@ public class ReserveController {
     public void ReserveArticle(Reserve reserve, final String token){
 
         RequestQueue requestQueue = Volley.newRequestQueue(context);
-        String url = "http://" + ip + ":" + port + route;
-        Gson gson =new Gson();
-        String jsonObject = gson.toJson(reserve,Reserve.class);
-        JSONObject jsonBody = gson.fromJson(jsonObject,JSONObject.class);
-        Toast.makeText(context, "json body"+jsonBody, Toast.LENGTH_SHORT).show();
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonBody, new Response.Listener<JSONObject>() {
+        String url = "http://" + ip + ":" + port + route;
+//        Gson gson =new Gson();
+//        String jsonObject = gson.toJson(reserve,Reserve.class);
+//        JSONObject jsonBody = gson.fromJson(jsonObject,JSONObject.class);
+//        Toast.makeText(context, "json body"+jsonBody, Toast.LENGTH_SHORT).show();
+
+        JSONObject jsonBody  = new JSONObject();
+        try {
+            jsonBody.put("user_id",reserve.getId_user());
+            jsonBody.put("order",reserve.getOrderArticle());
+            jsonBody.put("discriminator",reserve.getDiscriminator());
+            jsonBody.put("num_conception",reserve.getNum_conception());
+            jsonBody.putOpt("filenames",reserve.getPhotos().toString());
+        }catch (JSONException e){
+
+        }
+//        Toast.makeText(context, "json body"+jsonBody, Toast.LENGTH_SHORT).show();
+//
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, url, jsonBody, new Response.Listener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
 
                 if(response.length()>0){
 
-                    Toast.makeText(context, "Response:  ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Response:  " +response, Toast.LENGTH_SHORT).show();
 
                 }else{
 
@@ -70,7 +92,7 @@ public class ReserveController {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "Response:  " + error.toString(),Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Response:  " + error,Toast.LENGTH_LONG).show();
             }
         }){
             @Override
@@ -84,5 +106,33 @@ public class ReserveController {
         };
         requestQueue.add(jsonObjectRequest);
     }
+
+
+
+
+    ProgressDialog progressDialog;
+    public void progress(){
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage(""); // Setting Message
+        progressDialog.setTitle(""); // Setting Title
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
+        progressDialog.show(); // Display Progress Dialog
+        progressDialog.setCancelable(false);
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    Thread.sleep(2000);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                progressDialog.dismiss();
+            }
+        }).start();
+    }
+
+
+
+
+
 
 }

@@ -141,7 +141,7 @@ public class Login extends AppCompatActivity {
                         editor.commit();
                         progressDialog.dismiss();
 
-                        Toast.makeText(Login.this, " welcome ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Login.this, " welcome "+user.getInt("id"), Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                         startActivity(intent);
                         finish();

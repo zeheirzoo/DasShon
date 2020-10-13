@@ -1,5 +1,7 @@
 package com.example.project.models;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 
 public class Valid {
@@ -7,14 +9,14 @@ public class Valid {
     @SerializedName("user_id")
     int user_id;
     @SerializedName("order")
-    int orderArticle;
+    int order;
     String discriminator;
     int num_conception;
 
 
-    public Valid(int id_user, int orderArticle, String discriminator, int num_conception) {
+    public Valid(int user_id, int order, String discriminator, int num_conception) {
         this.user_id = user_id;
-        this.orderArticle = orderArticle;
+        this.order = order;
         this.discriminator = discriminator;
         this.num_conception = num_conception;
 
@@ -30,11 +32,11 @@ public class Valid {
     }
 
     public int getOrderArticle() {
-        return orderArticle;
+        return order;
     }
 
-    public void setOrderArticle(int orderArticle) {
-        this.orderArticle = orderArticle;
+    public void setOrderArticle(int order) {
+        this.order = order;
     }
 
     public String getDiscriminator() {
@@ -51,5 +53,15 @@ public class Valid {
 
     public void setNum_conception(int num_conception) {
         this.num_conception = num_conception;
+    }
+
+    @Override
+    public String toString() {
+        return "Valid{" +
+                "user_id=" + user_id +
+                ", order=" + order +
+                ", discriminator='" + discriminator + '\'' +
+                ", num_conception=" + num_conception +
+                '}';
     }
 }

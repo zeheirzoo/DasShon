@@ -1,5 +1,6 @@
 package com.example.project.ui.notifications;
 
+import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -14,6 +15,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,10 +29,18 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.project.HomeActivity;
 import com.example.project.R;
 import com.example.project.R;
 import com.example.project.ReclamationActivity;
 import com.example.project.ShowNotifContentActivity;
+import com.example.project.controllers.SocketController;
+import com.example.project.models.Reclamation;
 import com.example.project.models.Reserve;
 import com.example.project.network.WifiConnect;
 
@@ -39,32 +49,27 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
-import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
 
-import static android.Manifest.permission.ACCESS_NETWORK_STATE;
-import static android.Manifest.permission.ACCESS_WIFI_STATE;
-import static android.Manifest.permission.CAMERA;
-import static android.Manifest.permission.CHANGE_WIFI_STATE;
-import static android.Manifest.permission.INTERNET;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class NotificationsFragment extends Fragment {
-    private static final String CHANNEL_ID = "1";
     ListView nLV;
+    Activity activity;
     ArrayList<Reserve> NotificationList;
     NotificationAdapter notificationAdapter;
-private int i=0;
-    private  int port = 9090;
-    private  String ip = "192.168.43.207";
+    private WebSocket webSocket;
+
+    private  int port ;
+    private  String ip ;
 
     SharedPreferences.Editor editor;
     SharedPreferences sharedPref;
@@ -72,18 +77,15 @@ private int i=0;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_notifications, container, false);
-        createNotificationChannel();
-        showNotification ("dert diga ah .....");
+
+        activity=getActivity();
+        instantiateWebSocket();
 //        ============================================
         sharedPref =getContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
         editor = sharedPref.edit();
         SharedPreferences sharedPref =getActivity().getSharedPreferences("user_prefs",Context.MODE_PRIVATE);
         int  userId = sharedPref.getInt("user_id", -1);
 
-        String route = "/notification/"+userId;
-//            String url = "http://" + ip + ":" + port + route;
-//    String url="https://api.myjson.com/bins/11ka5w";
-    String url="wss://echo.websocket.org";
 
 
 
@@ -92,10 +94,16 @@ private int i=0;
         NotificationList.add(0,new Reserve(0));
         notificationAdapter=new NotificationAdapter(getContext(),R.layout.notificatin_item,NotificationList);
         nLV.setAdapter(notificationAdapter);
+        nLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), ShowNotifContentActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
         return root;
-
-
-
     }
 //
 //
@@ -103,39 +111,72 @@ private int i=0;
 
 
 
-
-public void   showNotification (String msg){
-    // Create an explicit intent for an Activity in your app
-    Intent intent = new Intent(getContext(), ShowNotifContentActivity.class);
-    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-    PendingIntent pendingIntent = PendingIntent.getActivity(getContext(), 0, intent, 0);
-
-    NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), CHANNEL_ID)
-            .setSmallIcon(R.mipmap.ic_logo_round)
-            .setContentTitle("Das Schön")
-            .setContentText(msg)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setContentIntent(pendingIntent)
-            .setAutoCancel(true);
-    Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-    builder.setSound(alarmSound);
-    NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getActivity());
-
-    notificationManager.notify(i++, builder.build());
-}
+    private void instantiateWebSocket() {
+        OkHttpClient client = new OkHttpClient();
+        ip=new WifiConnect(getContext(),activity).getIp();
+       port=new WifiConnect(getContext(),activity).getPort();
+        String url = "ws://" + ip + ":" + port + "/api/reserve";
+        //replace x.x.x.x with your machine's IP Address
+        Request request = new Request.Builder().url(url).build();
 
 
+        SocketController socketController = new SocketController((HomeActivity) activity);
+        webSocket = client.newWebSocket(request, socketController);
+        socketController. createNotificationChannel(activity);
+        socketController.  showNotification("on message!",activity);
+
+    }
 
 
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Notification channel name";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription("Notification channel description");
-            NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);
-            Objects.requireNonNull(notificationManager).createNotificationChannel(channel);
+    private void getAllReclamation(int fautif_id, final String token) {
+        List<Reclamation> reclamationList=new ArrayList<>();
+        RequestQueue requestQueue = Volley.newRequestQueue(activity);
+        ip=new WifiConnect(getContext(),activity).getIp();
+        port=new WifiConnect(getContext(),activity).getPort();
+        String url = "http://" + ip + ":" + port + "/reclamation";
+
+        JSONObject jsonBody  = new JSONObject();
+        try {
+            jsonBody.put("user_id",fautif_id);
+        }catch (JSONException e){
+
         }
+//        Toast.makeText(context, "json body"+jsonBody, Toast.LENGTH_SHORT).show();
+//
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(com.android.volley.Request.Method.POST, url, jsonBody, new com.android.volley.Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+
+                if(response.length()>0){
+
+                    Toast.makeText(activity, "Response:  " +response, Toast.LENGTH_SHORT).show();
+
+
+                }else{
+
+                    Toast.makeText(activity,"response empty"+response,Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        },new Response.ErrorListener(){
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(activity, "Response:  " + error,Toast.LENGTH_LONG).show();
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("Accept", "application/json");
+                params.put("Authorization", "Bearer "+token);
+
+                return params;
+            }
+        };
+        requestQueue.add(jsonObjectRequest);
 
     }
 

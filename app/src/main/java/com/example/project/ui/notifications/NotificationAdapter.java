@@ -25,7 +25,6 @@ public class NotificationAdapter extends ArrayAdapter<Reserve> {
         this.activity=context;
         this.resource=resource;
         this.list=list;
-
     }
 
     @NonNull

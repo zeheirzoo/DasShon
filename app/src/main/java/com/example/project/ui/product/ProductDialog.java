@@ -35,6 +35,7 @@ TextView article_name,cliet_name,num_consiption,order;
     private CodeScanner mCodeScanner;
     String discriminator,token;
     int userId,num_con,orderArt;
+    SharedPreferences sharedPref;
     public ProductDialog(@NonNull Context context, Result result, CodeScanner mCodeScanner) {
         super(context);
         this.result=result;
@@ -47,7 +48,7 @@ TextView article_name,cliet_name,num_consiption,order;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
 //        =======================================
-        SharedPreferences sharedPref =getContext().getSharedPreferences("user_prefs",Context.MODE_PRIVATE);
+        sharedPref=getContext().getSharedPreferences("user_prefs",Context.MODE_PRIVATE);
         userId = sharedPref.getInt("user_id", -1);
         token = sharedPref.getString("token", "");
         discriminator = sharedPref.getString("discriminator", "");
@@ -67,7 +68,7 @@ TextView article_name,cliet_name,num_consiption,order;
             cliet_name.setText(jsonObject.get("nomClient")+"" );
             num_consiption.setText(jsonObject.get("num_conception")+"" );
             article_name.setText(jsonObject.get("nomArticle")+"" );
-            order.setText(jsonObject.get("order")+"" );
+            order.setText(jsonObject.get("order")+"");
         } catch (JsonIOException e) {
             e.printStackTrace();
         }
@@ -93,6 +94,8 @@ TextView article_name,cliet_name,num_consiption,order;
                 ValidatController validatController=new ValidatController(getContext(),getOwnerActivity());
                 orderArt=Integer.parseInt(order.getText().toString());
                 num_con=Integer.parseInt(num_consiption.getText().toString());
+                userId = sharedPref.getInt("user_id", -1);
+                Toast.makeText(activity, "user" + userId, Toast.LENGTH_SHORT).show();
                 validatController.ValidateArticle(new Valid(userId,orderArt,discriminator,num_con),token);
                 progress();
                 mCodeScanner.startPreview();
