@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.crossbar.autobahn.websocket.WebSocketConnection;
+
 
 public class ReserveController {
 
@@ -50,7 +52,7 @@ public class ReserveController {
         this.context = context;
     }
 
-    public void ReserveArticle(Reserve reserve, final String token){
+    public void ReserveArticle(final Reserve reserve, final String token){
 
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
@@ -70,8 +72,9 @@ public class ReserveController {
         }catch (JSONException e){
 
         }
-//        Toast.makeText(context, "json body"+jsonBody, Toast.LENGTH_SHORT).show();
 //
+
+
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, url, jsonBody, new Response.Listener<JSONObject>() {
 
@@ -82,6 +85,21 @@ public class ReserveController {
 
                     Toast.makeText(context, "Response:  " +response, Toast.LENGTH_SHORT).show();
 
+                    WebSocketConnection connection=new WebSocketConnection();
+                    if (connection.isConnected()){
+                        JSONObject reclamationSocket = new JSONObject();
+                        try {
+                            String command="";
+                            if (reserve.getDiscriminator()=="quality")
+                                command="production";
+                            else command="quality";
+                            reclamationSocket.put("command",command);
+                            reclamationSocket.put("userId",reserve.getId_user());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        connection.sendMessage(reclamationSocket.toString());
+                    }
                 }else{
 
                     Toast.makeText(context,"response empty"+response,Toast.LENGTH_SHORT).show();

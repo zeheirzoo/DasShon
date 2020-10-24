@@ -15,7 +15,6 @@ public class User {
     //Date email_verified_at;
     String password;
     Date date;
-
     String _token;
 
 

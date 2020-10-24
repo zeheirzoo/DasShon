@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -40,10 +41,18 @@ public class SocketController {
     private int i=0;
     private static final String CHANNEL_ID = "1";
 
-    public SocketController(final HomeActivity activity) {
+    public SocketController(Activity activity) {
             this.activity = activity;
-        //webSockets
+        }
+
+    public void openConnection() {
         connection = new WebSocketConnection();
+        SharedPreferences sharedPref =activity.getSharedPreferences("user_prefs",Context.MODE_PRIVATE);
+        final int  userId = sharedPref.getInt("user_id", -1);
+        String token = sharedPref.getString("token", "");
+        final String discriminator = sharedPref.getString("discriminator", "");
+
+
         try {
             connection.connect("ws://192.168.43.8:8090",new WebSocketConnectionHandler(){
                 @Override
@@ -56,19 +65,21 @@ public class SocketController {
                     JSONObject register = new JSONObject();
                     try {
                         register.put("command","register");
-                        register.put("type","qualite");
-                        register.put("userId",1);
+                        register.put("type",discriminator);
+                        register.put("userId",userId);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
-                    connection.sendMessage(register.toString());
+                            connection.sendMessage(register.toString()
+);
                 }
 
                 @Override
                 public void onClose(int code, String reason) {
                     Log.i("WebSocket","Connection closed");
                 }
+
+
 
                 @Override
                 public void onMessage(String payload) {
@@ -78,7 +89,11 @@ public class SocketController {
                         switch(json.get("command").toString()) {
                             case "qualite":
                                 createNotificationChannel(activity);
-                                showNotification("rak nkhtlha mha",activity);
+                                showNotification("rak nkhtlha mha l lqualiti",activity);
+                                break;
+                                case "stock":
+                                createNotificationChannel(activity);
+                                showNotification("rak nkhtlha mha mn 3nd stoc",activity);
                                 break;
                             default:
 
@@ -87,13 +102,12 @@ public class SocketController {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    //connection.sendMessage(payload);
                 }
             });
         } catch (WebSocketException e) {
             e.printStackTrace();
         }
-        }
+    }
 
     public void createNotificationChannel(Context ctx) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

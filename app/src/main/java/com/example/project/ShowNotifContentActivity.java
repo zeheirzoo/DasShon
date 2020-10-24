@@ -24,7 +24,6 @@ import java.util.ArrayList;
 
 public class ShowNotifContentActivity extends AppCompatActivity {
     CarouselView carouselView;
-    ImageListener imageListener;
 //    String[]   sampleImages ={"https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_960_720.jpg",
 //            "https://raw.githubusercontent.com/sayyam/carouselview/master/sample/src/main/res/drawable/image_1.jpg",
 //            "https://raw.githubusercontent.com/sayyam/carouselview/master/sample/src/main/res/drawable/image_2.jpg"};
@@ -35,15 +34,17 @@ public class ShowNotifContentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_show_notif_content);
         getSupportActionBar().setTitle("Reclamation sur un Article ");
         carouselView=findViewById(R.id.carouselView);
-        imageListener = new ImageListener() {
-            @Override
-            public void setImageForPosition(int position, ImageView imageView) {
-                Picasso.get().load("https://oc.ocstatic.com/images/favicon/android-chrome-512x512.png").into(imageView);
-        }
-        };
         carouselView.setPageCount(sampleImages.length);
         carouselView.setImageListener(imageListener);
+
+
     }
+    ImageListener  imageListener = new ImageListener() {
+        @Override
+        public void setImageForPosition(int position, ImageView imageView) {
+            Picasso.get().load(sampleImages[position].toString()).placeholder(R.drawable.button_login).into(imageView);
+        }
+    };
 
 
 

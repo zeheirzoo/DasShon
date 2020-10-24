@@ -76,7 +76,8 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        instantiateWebSocket();
+        SocketController socketController = new SocketController(this);
+        socketController.openConnection();
         }
 
     @Override
@@ -127,16 +128,7 @@ public class HomeActivity extends AppCompatActivity {
 //
 
 
-    private void instantiateWebSocket() {
-        OkHttpClient client = new OkHttpClient();
-        String ip=new WifiConnect(getBaseContext(),this).getIp();
-       int port=new WifiConnect(getBaseContext(),this).getPort();
-        String url = "ws://" + ip + ":" + port + "/api/reserve";
-        //replace x.x.x.x with your machine's IP Address
-        Request request = new Request.Builder().url(url).build();
-        SocketController socketController = new SocketController(this);
 
-    }
 
 
 }
