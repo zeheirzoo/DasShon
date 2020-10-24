@@ -79,7 +79,7 @@ public class NotificationsFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_notifications, container, false);
 
         activity=getActivity();
-        instantiateWebSocket();
+//        instantiateWebSocket();
 //        ============================================
         sharedPref =getContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
         editor = sharedPref.edit();
@@ -111,21 +111,21 @@ public class NotificationsFragment extends Fragment {
 
 
 
-    private void instantiateWebSocket() {
-        OkHttpClient client = new OkHttpClient();
-        ip=new WifiConnect(getContext(),activity).getIp();
-       port=new WifiConnect(getContext(),activity).getPort();
-        String url = "ws://" + ip + ":" + port + "/api/reserve";
-        //replace x.x.x.x with your machine's IP Address
-        Request request = new Request.Builder().url(url).build();
-
-
-        SocketController socketController = new SocketController((HomeActivity) activity);
-        webSocket = client.newWebSocket(request, socketController);
-        socketController. createNotificationChannel(activity);
-        socketController.  showNotification("on message!",activity);
-
-    }
+//    private void instantiateWebSocket() {
+//        OkHttpClient client = new OkHttpClient();
+//        ip=new WifiConnect(getContext(),activity).getIp();
+//       port=new WifiConnect(getContext(),activity).getPort();
+//        String url = "ws://" + ip + ":" + port + "/api/reserve";
+//        //replace x.x.x.x with your machine's IP Address
+//        Request request = new Request.Builder().url(url).build();
+//
+//
+//        SocketController socketController = new SocketController((HomeActivity) activity);
+//        webSocket = client.newWebSocket(request, socketController);
+//        socketController. createNotificationChannel(activity);
+//        socketController.  showNotification("on message!",activity);
+//
+//    }
 
 
     private void getAllReclamation(int fautif_id, final String token) {

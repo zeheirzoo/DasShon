@@ -42,28 +42,33 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 //        =============================
+
         WifiConnect wifiConnect=new WifiConnect(this,this);
         wifiConnect.connect();
-//        ===============================
-        //        =======================================
+
+//        =====================================
+//        =====================================
 
          sharedPref =this.getSharedPreferences("user_prefs",Context.MODE_PRIVATE);
         int  userId = sharedPref.getInt("user_id", -1);
         String token = sharedPref.getString("token", "");
         String discriminator = sharedPref.getString("discriminator", "");
-//        Toast.makeText(this, ""+sharedPref.getAll(), Toast.LENGTH_SHORT).show();
+//      Toast.makeText(this, ""+sharedPref.getAll(), Toast.LENGTH_SHORT).show();
 //
         if (userId==-1 || discriminator.isEmpty() || token.isEmpty()){
             Intent intent = new Intent(getApplicationContext(), Login.class);
             startActivity(intent);
             finish();
         }
-//        =======================================
+
+//  =======================================
+
         BottomNavigationView navView = findViewById(R.id.nav_view);
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder( R.id.navigation_dashboard, R.id.navigation_notifications).build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
+
 //
 
     }
@@ -73,9 +78,6 @@ public class HomeActivity extends AppCompatActivity {
         super.onStart();
         instantiateWebSocket();
         }
-
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -132,8 +134,7 @@ public class HomeActivity extends AppCompatActivity {
         String url = "ws://" + ip + ":" + port + "/api/reserve";
         //replace x.x.x.x with your machine's IP Address
         Request request = new Request.Builder().url(url).build();
-        SocketController socketListener = new SocketController(this);
-        webSocket = client.newWebSocket(request, socketListener);
+        SocketController socketController = new SocketController(this);
 
     }
 

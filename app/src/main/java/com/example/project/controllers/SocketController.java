@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -24,81 +25,75 @@ import org.json.JSONObject;
 
 import java.util.Objects;
 
+import io.crossbar.autobahn.websocket.WebSocketConnection;
+import io.crossbar.autobahn.websocket.WebSocketConnectionHandler;
+import io.crossbar.autobahn.websocket.exceptions.WebSocketException;
+import io.crossbar.autobahn.websocket.types.ConnectionResponse;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
 
-public class SocketController extends WebSocketListener{
-
+public class SocketController {
+    WebSocketConnection connection;
     public Activity activity;
     private int i=0;
     private static final String CHANNEL_ID = "1";
 
-    public SocketController(HomeActivity activity) {
+    public SocketController(final HomeActivity activity) {
             this.activity = activity;
-        }
-
-        @Override
-        public void onOpen(WebSocket webSocket, Response response) {
-
-
-            activity.runOnUiThread(new Runnable() {
-
+        //webSockets
+        connection = new WebSocketConnection();
+        try {
+            connection.connect("ws://192.168.43.8:8090",new WebSocketConnectionHandler(){
                 @Override
-                public void run() {
-
-                    createNotificationChannel(activity);
-                    showNotification("Connection Established!",activity);
+                public void onConnect(ConnectionResponse response) {
+                    Log.i("WebSocket","Connected to server");
                 }
 
-            });
-
-        }
-
-        @Override
-        public void onMessage(WebSocket webSocket, final String text) {
-
-            activity.runOnUiThread(new Runnable() {
                 @Override
-                public void run() {
+                public void onOpen() {
+                    JSONObject register = new JSONObject();
+                    try {
+                        register.put("command","register");
+                        register.put("type","qualite");
+                        register.put("userId",1);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
-                        createNotificationChannel(activity);
-                        showNotification("on message!",activity);
+                    connection.sendMessage(register.toString());
+                }
 
+                @Override
+                public void onClose(int code, String reason) {
+                    Log.i("WebSocket","Connection closed");
+                }
 
+                @Override
+                public void onMessage(String payload) {
+                    //Log.i("WebSocket","Received message: " + payload);
+                    try {
+                        JSONObject json = new JSONObject(payload);
+                        switch(json.get("command").toString()) {
+                            case "qualite":
+                                createNotificationChannel(activity);
+                                showNotification("rak nkhtlha mha",activity);
+                                break;
+                            default:
+
+                                break;
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    //connection.sendMessage(payload);
                 }
             });
+        } catch (WebSocketException e) {
+            e.printStackTrace();
         }
-
-
-
-        @Override
-        public void onMessage(WebSocket webSocket, ByteString bytes) {
-            super.onMessage(webSocket, bytes);
         }
-
-
-
-        @Override
-        public void onClosing(WebSocket webSocket, int code, String reason) {
-            super.onClosing(webSocket, code, reason);
-        }
-
-
-
-        @Override
-        public void onClosed(WebSocket webSocket, int code, String reason) {
-            super.onClosed(webSocket, code, reason);
-        }
-
-
-
-        @Override
-        public void onFailure(WebSocket webSocket, final Throwable t, @Nullable final Response response) {
-            super.onFailure(webSocket, t, response);
-        }
-
 
     public void createNotificationChannel(Context ctx) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

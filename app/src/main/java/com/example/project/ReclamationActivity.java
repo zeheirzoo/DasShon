@@ -121,10 +121,6 @@ public class ReclamationActivity extends AppCompatActivity {
         });
     }
 
-
-
-
-
     public void onTakePictureClick() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
