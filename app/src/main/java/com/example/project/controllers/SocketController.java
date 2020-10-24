@@ -54,7 +54,7 @@ public class SocketController {
 
 
         try {
-            connection.connect("ws://192.168.43.8:8090",new WebSocketConnectionHandler(){
+            connection.connect("ws://192.168.1.11:8090",new WebSocketConnectionHandler(){
                 @Override
                 public void onConnect(ConnectionResponse response) {
                     Log.i("WebSocket","Connected to server");

@@ -3,6 +3,7 @@ package com.example.project.controllers;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -25,10 +26,14 @@ import java.util.List;
 import java.util.Map;
 
 import io.crossbar.autobahn.websocket.WebSocketConnection;
+import io.crossbar.autobahn.websocket.WebSocketConnectionHandler;
+import io.crossbar.autobahn.websocket.exceptions.WebSocketException;
+import io.crossbar.autobahn.websocket.types.ConnectionResponse;
 
 
 public class ReserveController {
-
+    WebSocketConnection connection;
+    JSONObject reclamationSocket;
     private  int port;
     private  String ip;
 
@@ -51,7 +56,7 @@ public class ReserveController {
     public void setContext(Context context) {
         this.context = context;
     }
-    WebSocketConnection connection;
+
 
     public void ReserveArticle(final Reserve reserve, final String token){
         connection=new WebSocketConnection();
@@ -89,19 +94,34 @@ public class ReserveController {
 
                     Toast.makeText(context, "Response:  " +response, Toast.LENGTH_SHORT).show();
 
-                        JSONObject reclamationSocket = new JSONObject();
+                         reclamationSocket = new JSONObject();
                         try {
                             String command="";
                             if (reserve.getDiscriminator()=="quality")
-                                command="production";
-                            else command="quality";
+                                command="productionReclamation";
+                            else command="qualityReclamation";
                             reclamationSocket.put("command",command);
                             reclamationSocket.put("userId",response.getJSONObject("article").get("id"));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        connection.sendMessage(reclamationSocket.toString());
+                            if (connection.isConnected()){
+                             connection. sendMessage(reclamationSocket.toString());
+                            }else {
+                                try {
+                                    connection.connect("ws://192.168.1.11:8090",new WebSocketConnectionHandler(){
+                                        @Override
+                                        public void onConnect(ConnectionResponse response) {
+                                            Log.i("WebSocket","Connected to server");
+                                            connection. sendMessage(reclamationSocket.toString());
+                                        }
 
+                                        });
+
+                                } catch (WebSocketException e) {
+
+                                }
+                            }
                 }else{
 
                     Toast.makeText(context,"response empty"+response,Toast.LENGTH_SHORT).show();
