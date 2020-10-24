@@ -51,8 +51,12 @@ public class ReserveController {
     public void setContext(Context context) {
         this.context = context;
     }
+    WebSocketConnection connection;
 
     public void ReserveArticle(final Reserve reserve, final String token){
+        connection=new WebSocketConnection();
+
+        if (connection.isConnected()){}
 
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
@@ -85,8 +89,6 @@ public class ReserveController {
 
                     Toast.makeText(context, "Response:  " +response, Toast.LENGTH_SHORT).show();
 
-                    WebSocketConnection connection=new WebSocketConnection();
-                    if (connection.isConnected()){
                         JSONObject reclamationSocket = new JSONObject();
                         try {
                             String command="";
@@ -94,12 +96,12 @@ public class ReserveController {
                                 command="production";
                             else command="quality";
                             reclamationSocket.put("command",command);
-                            reclamationSocket.put("userId",reserve.getId_user());
+                            reclamationSocket.put("userId",response.getJSONObject("article").get("id"));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                         connection.sendMessage(reclamationSocket.toString());
-                    }
+
                 }else{
 
                     Toast.makeText(context,"response empty"+response,Toast.LENGTH_SHORT).show();
