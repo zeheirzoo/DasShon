@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.project.testWebsocket">
+    <com.jama.carouselview.CarouselView
+        android:id="@+id/carouselView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:enableSnapping="true"
+        app:scaleOnScroll="false"
+        app:setAutoPlay="false"
+        app:setAutoPlayDelay="3000"
+        app:carouselOffset="center"
+        app:indicatorRadius="5"
+        app:indicatorPadding="5"
+        app:indicatorSelectedColor="@color/colorAccent"
+        app:indicatorUnselectedColor="@color/colorPrimary"
+        app:size="10"
+        app:spacing="10"
+        tools:ignore="MissingConstraints" />
+</androidx.constraintlayout.widget.ConstraintLayout>
