@@ -4,13 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:padding="10dp">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
         <RelativeLayout
-            android:id="@+id/R1"
+            android:id="@+id/R2"
+
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
 
@@ -108,29 +110,32 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/R2"
+            android:id="@+id/R1"
+            android:layout_below="@id/R2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/R1"
             android:background="@drawable/bg_btn_white" >
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/challenge_image"
                 android:padding="5dp">
-                <com.synnapps.carouselview.CarouselView
+                <com.jama.carouselview.CarouselView
                     android:id="@+id/carouselView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="500dp"
-                    app:autoPlay="false"
-                    app:fillColor="#FFFFFFFF"
-                    app:pageColor="#00000000"
-                    app:radius="6dp"
-                    app:slideInterval="3000"
-                    app:strokeColor="#FF777777"
-                    app:strokeWidth="1dp"
-                    />
+                    app:enableSnapping="false"
+                    app:scaleOnScroll="false"
+                    app:setAutoPlay="false"
+                    app:carouselOffset="center"
+                    app:indicatorAnimationType="slide"
+                    app:indicatorRadius="5"
+                    app:indicatorPadding="5"
+                    app:indicatorSelectedColor="@color/colorAccent"
+                    app:indicatorUnselectedColor="@color/colorPrimary"
+                    app:size="10"
+                    app:spacing="10"
+                    tools:ignore="MissingConstraints" />
             </RelativeLayout>
 
 

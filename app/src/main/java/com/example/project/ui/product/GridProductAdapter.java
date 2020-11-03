@@ -1,10 +1,10 @@
 package com.example.project.ui.product;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,17 +17,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.project.R;
-import com.example.project.R;
 
+import java.net.URI;
 import java.util.ArrayList;
+import java.util.List;
 
 public class GridProductAdapter extends ArrayAdapter<Bitmap> {
     Context context;
-    ArrayList<Bitmap> arrayList;
-    public GridProductAdapter(@NonNull Context context, int resource,ArrayList<Bitmap> bitmaps) {
+    List<Uri> arrayList;
+    public GridProductAdapter(@NonNull Context context, int resource, List<Uri> uris) {
         super(context, resource);
         this.context=context;
-        this.arrayList=bitmaps;
+        this.arrayList=uris;
     }
 
 
@@ -68,7 +69,7 @@ public class GridProductAdapter extends ArrayAdapter<Bitmap> {
 
             }
         });
-            imageView.setImageBitmap(getItem(position));
+            imageView.setImageURI(arrayList.get(position));
 
         return convertView;
 

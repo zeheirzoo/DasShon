@@ -1,6 +1,8 @@
 package com.example.project;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
@@ -13,10 +15,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.FileUtils;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -38,8 +43,17 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Retrofit;
 
 public class ReclamationActivity extends AppCompatActivity {
     private final static int CAMERA_REQUEST = 2;
@@ -58,6 +72,8 @@ public class ReclamationActivity extends AppCompatActivity {
     Button accept,reject;
     JsonObject jsonObject;
     SharedPreferences sharedPref;
+    private List<Uri> arrayList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,8 +106,7 @@ public class ReclamationActivity extends AppCompatActivity {
 
         gridView=findViewById(R.id.grid);
         bitmaps=new ArrayList<>();
-        adapter =new GridProductAdapter(this,R.layout.grid_item,bitmaps);
-        gridView.setAdapter(adapter);
+
 
         ImageButton buCam=(ImageButton) findViewById(R.id.camera);
         buCam.setOnClickListener(new View.OnClickListener() {
@@ -101,8 +116,9 @@ public class ReclamationActivity extends AppCompatActivity {
                         ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST);
                     return;
+                }else{
+                    onTakePictureClick();
                 }
-                onTakePictureClick();
 
             }
         });
@@ -115,7 +131,11 @@ public class ReclamationActivity extends AppCompatActivity {
                     Toast.makeText(ReclamationActivity.this, "Capturer la panne", Toast.LENGTH_SHORT).show();
                 }else{
                     ReserveController reserveController=new ReserveController(getApplicationContext(), ReclamationActivity.this);
-                    reserveController.ReserveArticle(new Reserve(userId,order,discriminator,num_consiption,stringImages),token);
+                    try {
+                        reserveController.ReserveArticle(new Reserve(userId,order,discriminator,num_consiption,stringImages),token,arrayList);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -135,22 +155,44 @@ public class ReclamationActivity extends AppCompatActivity {
 
     }
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
+    protected void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+        super.onActivityResult(requestCode, resultCode, resultData);
+        if (resultCode == RESULT_OK) {
+                if (resultData != null) {
+                    if (resultData.getClipData() != null) {
+                        int count = resultData.getClipData().getItemCount();
+                        int currentItem = 0;
+                        while (currentItem < count) {
+                            Uri imageUri = resultData.getClipData().getItemAt(currentItem).getUri();
+                            currentItem = currentItem + 1;
 
-            bitmaps.add(photo);
-            Toast.makeText(this, bitmaps.size()+"", Toast.LENGTH_SHORT).show();
-            adapter.add(photo);
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            photo.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-            byte[] imageBytes = byteArrayOutputStream.toByteArray();
-            stringImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-            stringImages.add(stringImage);
+                            Log.d("Uri Selected", imageUri.toString());
 
+                            try {
+                                arrayList.add(imageUri);
+                                adapter =new GridProductAdapter(this,R.layout.grid_item,arrayList);
+                                gridView.setAdapter(adapter);
 
-        }
+                            } catch (Exception e) {
+                                Log.e("choseImage", "File select error", e);
+                            }
+                        }
+                    } else if (resultData.getData() != null) {
+
+                        final Uri uri = resultData.getData();
+                        Log.i("", "Uri = " + uri.toString());
+
+                        try {
+                            arrayList.add(uri);
+                            adapter =new GridProductAdapter(this,R.layout.grid_item,arrayList);
+                            gridView.setAdapter(adapter);
+
+                        } catch (Exception e) {
+                            Log.e("TAG", "File select error", e);
+                        }
+                    }
+                }
+            }
     }
 
 
@@ -199,4 +241,4 @@ public class ReclamationActivity extends AppCompatActivity {
         startActivity(new Intent(ReclamationActivity.this,Login.class));
         finish();
     }
-}
+  }
